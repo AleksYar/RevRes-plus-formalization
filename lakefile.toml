@@ -17,3 +17,6 @@ rev = "v4.32.0"
 
 [[lean_lib]]
 name = "Lemma53"
+
+[[lean_lib]]
+name = "Revres"
