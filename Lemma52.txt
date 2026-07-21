@@ -1,0 +1,224 @@
+## Lemma A — simplified Lean-friendly version
+
+Let
+[
+g(s,u,v)=
+\begin{cases}
+u,&s=0,\
+v,&s=1.
+\end{cases}
+]
+
+For (b\in\mathbb F_2), let
+[
+F_b:=g^{-1}(b)\subseteq\mathbb F_2^3.
+]
+Then
+[
+|F_b|=4.
+]
+
+For (z\in\mathbb F_2^N), let
+[
+F_z:=\prod_{i=1}^N F_{z_i}.
+]
+Thus
+[
+|F_z|=4^N.
+]
+
+Let
+[
+A={x\in\mathbb F_2^{3N}:Mx=c},
+]
+where (M) has rank (r).
+
+Then
+[
+\frac{|A\cap F_z|}{|F_z|}
+\le
+\left(\frac34\right)^{r/3}.
+]
+
+Consequently,
+[
+\Pr_{x\sim\mu_z}[x\in A]
+\le
+2^{-\kappa_0r},
+\qquad
+\kappa_0=\frac13\log_2\frac43.
+]
+
+### Proof
+
+We need only one local observation.
+
+### Local fact
+
+For every (b\in\mathbb F_2), every nonconstant affine equation
+[
+a_1s+a_2u+a_3v=d,
+\qquad
+(a_1,a_2,a_3)\ne0,
+]
+is satisfied by at most (3) of the (4) points of (F_b).
+
+This can be checked directly from the four points of each fiber.
+
+---
+
+Apply Gaussian elimination to the affine system (Mx=c), ordering the variables blockwise:
+[
+(s_1,u_1,v_1),(s_2,u_2,v_2),\ldots,(s_N,u_N,v_N).
+]
+
+There are (r) pivot columns. Since every block contains only (3) columns, the pivot columns occur in at least
+[
+m\ge r/3
+]
+distinct blocks.
+
+Choose one pivot row from each such block. Let the chosen pivot blocks be
+[
+i_1<i_2<\cdots<i_m.
+]
+
+Now process these blocks from right to left:
+[
+i_m,i_{m-1},\ldots,i_1.
+]
+
+Fix arbitrary values of all blocks to the right of the current block (i_j).
+
+Because the chosen row has its pivot in block (i_j), and all entries before its pivot are zero, after the right-hand blocks have been fixed its equation is a nonconstant affine equation in the three variables
+[
+(s_{i_j},u_{i_j},v_{i_j}).
+]
+
+By the local fact, among the (4) possible values in
+[
+F_{z_{i_j}},
+]
+at most (3) satisfy this equation.
+
+Therefore every chosen pivot block reduces the number of possible fiber assignments by a factor at most (3/4).
+
+There are (m) such blocks, so
+[
+|A\cap F_z|
+\le
+3^m4^{N-m}.
+]
+
+Hence
+[
+\frac{|A\cap F_z|}{4^N}
+\le
+\left(\frac34\right)^m
+\le
+\left(\frac34\right)^{r/3}.
+]
+
+Finally,
+[
+\left(\frac34\right)^{r/3}
+==========================
+
+2^{-\frac r3\log_2(4/3)}.
+]
+
+Thus, with
+[
+\kappa_0:=\frac13\log_2\frac43,
+]
+we obtain
+[
+\Pr_{x\sim\mu_z}[x\in A]
+\le
+2^{-\kappa_0r}.
+]
+
+(\square)
+
+---
+
+## Minimal Lean dependency structure
+
+I would formalize only these four statements.
+
+### 1. One-block lemma
+
+```lean
+lemma fiber_affine_le_three
+    (b d : F2) (a : Fin 3 → F2)
+    (ha : a ≠ 0) :
+    {x ∈ gadgetFiber b | dot a x = d}.card ≤ 3
+```
+
+This should simply be proved by `fin_cases` or exhaustive computation.
+
+No affine-span theory is needed.
+
+### 2. Pivot-block counting
+
+If a rank-(r) echelon matrix has columns divided into blocks of size (3), and (m) blocks contain pivots, then
+
+```lean
+r ≤ 3 * m
+```
+
+This is just cardinality counting.
+
+### 3. Main finite counting lemma
+
+The real core should be stated without probabilities:
+
+```lean
+lemma affine_inter_fiber_card_bound :
+    (A ∩ gadgetFiberN z).card * 4^m ≤ 3^m * 4^N
+```
+
+where (m) is the number of selected pivot blocks.
+
+Equivalently, when subtraction of exponents is convenient,
+
+[
+|A\cap F_z|\le 3^m4^{N-m}.
+]
+
+Prove this directly by induction over the selected pivot blocks from right to left.
+
+### 4. Numerical conversion
+
+Only at the very end convert the cardinality inequality into
+
+[
+h_A(z)\le(3/4)^m
+]
+and then use
+[
+r\le3m
+]
+to derive
+[
+h_A(z)\le2^{-\kappa_0r}.
+]
+
+---
+
+## What to remove from the current proof
+
+For a concise Lean formalization, I would completely remove:
+
+* Lemma 5.1 from the dependency of Lemma 5.2;
+* affine-span terminology;
+* conditional probabilities;
+* independence arguments;
+* chain-rule multiplication of conditional probabilities;
+* a separate claim about “previously selected pivot equations.”
+
+All of this is replaced by one recursive counting statement:
+
+> **After fixing the blocks to the right, a selected pivot equation leaves at most 3 choices for the current block instead of 4.**
+
+That is the entire combinatorial core of Lemma 5.2.

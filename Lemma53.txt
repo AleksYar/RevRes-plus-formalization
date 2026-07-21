@@ -1,0 +1,1101 @@
+# Affine-to-Conical Decomposition for the 3-Bit Index Gadget
+
+Throughout, let
+[
+\mathbb F_2={0,1}
+]
+with addition and multiplication modulo (2).
+
+Fix (N\ge 1).
+
+## 1. The indexing gadget
+
+Define
+[
+g:\mathbb F_2^3\to \mathbb F_2
+]
+by
+[
+g(s,u,v)=
+\begin{cases}
+u,&s=0,\
+v,&s=1.
+\end{cases}
+]
+
+Equivalently,
+[
+g(s,u,v)=(1-s)u+sv.
+]
+
+For every (b\in\mathbb F_2),
+[
+|g^{-1}(b)|=4.
+]
+
+For
+[
+X=((s_i,u_i,v_i))*{i\in[N]}\in(\mathbb F_2^3)^N,
+]
+define
+[
+g^N(X):=(g(s_i,u_i,v_i))*{i\in[N]}\in\mathbb F_2^N.
+]
+
+For (z\in\mathbb F_2^N), define the gadget fiber
+[
+\operatorname{Fib}(z)
+:=
+{X\in(\mathbb F_2^3)^N:g^N(X)=z}.
+]
+
+Since every one-block fiber has size (4),
+[
+|\operatorname{Fib}(z)|=4^N.
+]
+
+---
+
+## 2. Affine preimage density
+
+Let
+[
+A\subseteq(\mathbb F_2^3)^N
+]
+be an affine subspace.
+
+Define
+[
+h_A:\mathbb F_2^N\to\mathbb R_{\ge0}
+]
+by
+[
+h_A(z)
+:=
+\frac{|A\cap\operatorname{Fib}(z)|}{4^N}.
+]
+
+Thus (h_A(z)) is the probability that a uniformly random element of the gadget fiber over (z) belongs to (A).
+
+Clearly,
+[
+0\le h_A(z)\le1.
+]
+
+---
+
+## 3. Terms and conical juntas
+
+Let (U\subseteq[N]), and let
+[
+\alpha:U\to\mathbb F_2.
+]
+
+Define the cube indicator
+[
+\tau_{U,\alpha}(z)
+:=
+\mathbf 1[z|_U=\alpha].
+]
+
+Equivalently,
+[
+\tau_{U,\alpha}(z)
+==================
+
+\prod_{\substack{i\in U\\alpha(i)=1}}z_i
+\prod_{\substack{i\in U\\alpha(i)=0}}(1-z_i).
+]
+
+Its degree is
+[
+\deg(\tau_{U,\alpha})=|U|.
+]
+
+A function
+[
+J:\mathbb F_2^N\to\mathbb R_{\ge0}
+]
+is a **conical junta of degree at most (R)** if it can be written as
+[
+J(z)
+====
+
+\sum_{k=1}^m
+\lambda_k\tau_{U_k,\alpha_k}(z),
+]
+where
+[
+\lambda_k\ge0
+\qquad\text{and}\qquad
+|U_k|\le R
+]
+for every (k).
+
+---
+
+## 4. High-codimension affine-mass bound
+
+We use the following preceding lemma.
+
+### Lemma A: affine mass bound
+
+There exists an absolute constant
+[
+\kappa_0>0
+]
+such that, for every nonempty affine subspace
+[
+A\subseteq(\mathbb F_2^3)^N
+]
+of codimension (r),
+[
+h_A(z)\le 2^{-\kappa_0 r}
+]
+for every
+[
+z\in\mathbb F_2^N.
+]
+
+For the 3-bit indexing gadget one may take
+[
+\kappa_0
+========
+
+\frac13\log_2\frac43.
+]
+
+This is Lemma 5.2 of the manuscript.
+
+---
+
+# 5. Main lemma
+
+### Lemma: affine-to-conical decomposition
+
+There exists an absolute constant
+[
+\kappa>0
+]
+such that the following holds.
+
+For every integer (R\ge1) and every affine subspace
+[
+A\subseteq(\mathbb F_2^3)^N,
+]
+there exist functions
+[
+J_A,E_A:\mathbb F_2^N\to\mathbb R_{\ge0}
+]
+such that
+
+[
+h_A=J_A+E_A,
+]
+
+and:
+
+1. (J_A) is a conical junta of degree at most (R);
+
+2. for every (z\in\mathbb F_2^N),
+   [
+   0\le J_A(z)\le h_A(z)\le1;
+   ]
+
+3. for every (z\in\mathbb F_2^N),
+   [
+   0\le E_A(z)\le 2^{-\kappa R}.
+   ]
+
+One may take
+[
+\kappa
+======
+
+\min\left{
+\frac{\kappa_0}{4},
+\frac14
+\right}.
+]
+
+---
+
+# 6. Proof
+
+We divide the proof into explicit steps.
+
+## Step 0. The empty affine space
+
+If
+[
+A=\varnothing,
+]
+define
+[
+J_A(z):=0,
+\qquad
+E_A(z):=0.
+]
+
+All conclusions are immediate.
+
+Henceforth assume
+[
+A\ne\varnothing.
+]
+
+Let
+[
+r:=\operatorname{codim}(A).
+]
+
+---
+
+## Step 1. High-codimension case
+
+Assume
+[
+r>\frac R4.
+]
+
+Define
+[
+J_A:=0,
+\qquad
+E_A:=h_A.
+]
+
+By Lemma A,
+[
+E_A(z)
+======
+
+h_A(z)
+\le
+2^{-\kappa_0 r}
+\le
+2^{-\kappa_0R/4}.
+]
+
+Thus the conclusion holds in this case.
+
+It remains to consider
+[
+r\le\frac R4.
+]
+
+---
+
+# 7. Splitting selector and data coordinates
+
+Write an internal gadget assignment as
+[
+X=(s,y),
+]
+where
+[
+s=(s_1,\dots,s_N)\in\mathbb F_2^N
+]
+is the vector of selector bits and
+[
+y=(u_1,v_1,\dots,u_N,v_N)\in\mathbb F_2^{2N}
+]
+is the vector of data bits.
+
+Because (A) is a nonempty affine subspace of codimension (r), choose a full-row-rank system
+[
+M_s s+M_y y=c
+]
+whose solution set is exactly (A).
+
+Thus (M=(M_s\mid M_y)) has rank (r).
+
+Define
+[
+L:=\operatorname{rowspan}(M_y)
+\subseteq\mathbb F_2^{2N}
+]
+and
+[
+t:=\dim L=\operatorname{rank}(M_y).
+]
+
+In particular,
+[
+t\le r.
+]
+
+The space (L) is fixed once (A) is fixed; importantly, it does not depend on the selector assignment below.
+
+---
+
+# 8. Condition on the selector vector
+
+Fix
+[
+\sigma\in\mathbb F_2^N.
+]
+
+Define
+[
+h_{A,\sigma}(z)
+:=
+\Pr[X\in A
+\mid
+g^N(X)=z,\ s=\sigma].
+]
+
+A useful purely finite formulation is:
+[
+h_{A,\sigma}(z)
+===============
+
+\frac{
+|{y:
+(\sigma,y)\in A
+\text{ and }
+y_{i,\sigma_i}=z_i\ \forall i}|
+}{
+2^N
+}.
+]
+
+Indeed, after fixing (s=\sigma) and (g^N(X)=z),
+
+* the selected coordinate (y_{i,\sigma_i}) is forced to equal (z_i);
+* the unselected coordinate (y_{i,1-\sigma_i}) is uniformly free.
+
+Moreover, the selector vector is uniformly distributed, so
+[
+h_A(z)
+======
+
+2^{-N}\sum_{\sigma\in\mathbb F_2^N}
+h_{A,\sigma}(z).
+\tag{1}
+]
+
+This identity should be isolated as a separate Lean lemma.
+
+---
+
+# 9. The selected-coordinate subspace
+
+For (i\in[N]) and (b\in\mathbb F_2), let
+[
+e_{i,b}\in\mathbb F_2^{2N}
+]
+be the standard basis vector corresponding to
+
+* (u_i) when (b=0);
+* (v_i) when (b=1).
+
+For a selector vector (\sigma), define
+[
+E_\sigma
+:=
+\operatorname{span}
+{e_{i,\sigma_i}:i\in[N]}.
+]
+
+Thus (E_\sigma) consists exactly of vectors supported only on the selected data coordinate in each block.
+
+Define
+[
+W_\sigma
+:=
+L\cap E_\sigma.
+]
+
+---
+
+# 10. Block support
+
+For
+[
+w\in\mathbb F_2^{2N},
+]
+define its block support by
+[
+\operatorname{bsupp}(w)
+:=
+{i\in[N]:(w_{i,0},w_{i,1})\ne(0,0)}.
+]
+
+Define
+[
+U_\sigma
+:=
+\bigcup_{w\in W_\sigma}
+\operatorname{bsupp}(w).
+]
+
+Because
+[
+W_\sigma\subseteq E_\sigma,
+]
+every (w\in W_\sigma) uses at most one data coordinate in every gadget block.
+
+---
+
+# 11. Exact structure of (h_{A,\sigma})
+
+We now prove the key local statement.
+
+### Claim 1
+
+For every selector vector (\sigma), the function
+[
+h_{A,\sigma}(z)
+]
+depends only on the outer coordinates
+[
+{z_i:i\in U_\sigma}.
+]
+
+More precisely, either
+[
+h_{A,\sigma}\equiv0,
+]
+or there exists an affine predicate
+[
+P_\sigma
+]
+depending only on (z|*{U*\sigma}) such that
+[
+h_{A,\sigma}(z)
+===============
+
+2^{-(t-\dim W_\sigma)}
+\mathbf 1[P_\sigma(z)].
+\tag{2}
+]
+
+### Proof of Claim 1
+
+After substituting
+[
+s=\sigma,
+]
+the affine system for (A) becomes
+[
+M_y y=c-M_s\sigma.
+\tag{3}
+]
+
+If (3) is inconsistent, then
+[
+h_{A,\sigma}\equiv0.
+]
+
+Suppose it is consistent.
+
+Choose a full-row-rank matrix (B) whose row space is (L), together with a right-hand side (d_\sigma), so that (3) is equivalent to
+[
+By=d_\sigma.
+]
+
+Partition the data coordinates into:
+
+* (S): the selected coordinates ((i,\sigma_i));
+* (U): the unselected coordinates ((i,1-\sigma_i)).
+
+Correspondingly write
+[
+B=(B_S\mid B_U).
+]
+
+Under the conditional gadget distribution,
+[
+y_S=z
+]
+and
+[
+y_U
+]
+is uniformly distributed in (\mathbb F_2^N).
+
+Hence
+[
+h_{A,\sigma}(z)
+===============
+
+\Pr_{y_U}
+[
+B_Uy_U=d_\sigma-B_Sz
+].
+\tag{4}
+]
+
+A linear system
+[
+B_Uy_U=b
+]
+is either inconsistent or has exactly
+[
+2^{N-\operatorname{rank}(B_U)}
+]
+solutions.
+
+Therefore (4) is either zero or
+[
+2^{-\operatorname{rank}(B_U)}.
+\tag{5}
+]
+
+Next,
+[
+t-\operatorname{rank}(B_U)
+==========================
+
+\dim W_\sigma.
+\tag{6}
+]
+
+Indeed, the left kernel
+[
+{q:q^\top B_U=0}
+]
+is naturally isomorphic, via
+[
+q\longmapsto q^\top B,
+]
+to
+[
+L\cap E_\sigma=W_\sigma.
+]
+
+Since (B) has (t) independent rows,
+[
+\dim\ker(B_U^\top)
+==================
+
+t-\operatorname{rank}(B_U),
+]
+giving (6).
+
+Thus the nonzero value in (5) equals
+[
+2^{-(t-\dim W_\sigma)}.
+]
+
+Finally, consistency of
+[
+B_Uy_U=d_\sigma-B_Sz
+]
+is characterized by the equations
+[
+q^\top(d_\sigma-B_Sz)=0
+\qquad
+\text{for all }q\text{ with }q^\top B_U=0.
+]
+
+The corresponding vectors
+[
+q^\top B
+]
+belong to (W_\sigma), hence involve only blocks from (U_\sigma).
+
+Therefore the consistency predicate depends only on
+[
+z|*{U*\sigma}.
+]
+
+This proves Claim 1.
+
+---
+
+# 12. Good selectors
+
+Call a selector vector (\sigma) **good** if
+[
+|U_\sigma|\le R.
+]
+
+Define
+[
+J_A(z)
+:=
+2^{-N}
+\sum_{\sigma\in\mathbb F_2^N}
+\mathbf 1[|U_\sigma|\le R],
+h_{A,\sigma}(z).
+\tag{7}
+]
+
+Define
+[
+E_A(z)
+:=
+2^{-N}
+\sum_{\sigma\in\mathbb F_2^N}
+\mathbf 1[|U_\sigma|>R],
+h_{A,\sigma}(z).
+\tag{8}
+]
+
+By (1),
+[
+h_A=J_A+E_A.
+\tag{9}
+]
+
+Also,
+[
+0\le J_A(z)\le h_A(z)\le1,
+]
+and
+[
+E_A(z)\ge0.
+]
+
+---
+
+# 13. Good selectors give conical juntas
+
+### Claim 2
+
+If
+[
+|U_\sigma|\le R,
+]
+then (h_{A,\sigma}) is a conical junta of degree at most (R).
+
+### Proof
+
+By Claim 1, (h_{A,\sigma}) depends only on
+[
+z|*{U*\sigma}.
+]
+
+Hence there is a function
+[
+\bar h_{A,\sigma}:
+\mathbb F_2^{U_\sigma}\to\mathbb R_{\ge0}
+]
+such that
+[
+h_{A,\sigma}(z)
+===============
+
+\bar h_{A,\sigma}(z|*{U*\sigma}).
+]
+
+Therefore
+[
+h_{A,\sigma}(z)
+===============
+
+\sum_{\alpha\in\mathbb F_2^{U_\sigma}}
+\bar h_{A,\sigma}(\alpha)
+,\tau_{U_\sigma,\alpha}(z).
+\tag{10}
+]
+
+Every coefficient is nonnegative, and every term has degree
+[
+|U_\sigma|\le R.
+]
+
+Thus (h_{A,\sigma}) is a degree-(R) conical junta.
+
+Since (J_A) is a nonnegative average of such functions, (J_A) is also a conical junta of degree at most (R).
+
+---
+
+# 14. A bad selector produces a wide vector
+
+We now bound the probability that
+[
+|U_\sigma|>R.
+]
+
+### Claim 3
+
+If
+[
+|U_\sigma|>R,
+]
+then there exists
+[
+w\in W_\sigma
+]
+such that
+[
+|\operatorname{bsupp}(w)|>\frac R2.
+\tag{11}
+]
+
+### Proof
+
+Choose (w) uniformly from the finite vector space (W_\sigma).
+
+For every
+[
+i\in U_\sigma,
+]
+the coordinate map
+[
+W_\sigma\to\mathbb F_2,
+\qquad
+w\mapsto w_{i,\sigma_i}
+]
+is a nonzero linear functional.
+
+A nonzero linear functional on a finite (\mathbb F_2)-vector space is (1) on exactly half of the vectors.
+
+Therefore
+[
+\Pr_{w\in W_\sigma}
+[w_{i,\sigma_i}=1]
+==================
+
+\frac12.
+]
+
+Since vectors in (W_\sigma\subseteq E_\sigma) use at most one coordinate in each block,
+[
+|\operatorname{bsupp}(w)|
+=========================
+
+\sum_{i\in U_\sigma}
+\mathbf 1[w_{i,\sigma_i}=1].
+]
+
+Taking expectations,
+[
+\mathbb E_w
+|\operatorname{bsupp}(w)|
+=========================
+
+\frac{|U_\sigma|}{2}
+
+>
+
+\frac R2.
+]
+
+Hence some (w\in W_\sigma) satisfies (11).
+
+---
+
+# 15. Probability that a fixed vector belongs to (E_\sigma)
+
+### Claim 4
+
+Fix a nonzero
+[
+w\in\mathbb F_2^{2N}.
+]
+
+If (w) uses both data coordinates of some block (i), then
+[
+w\notin E_\sigma
+]
+for every selector vector (\sigma).
+
+Otherwise,
+[
+\Pr_\sigma[w\in E_\sigma]
+=========================
+
+2^{-|\operatorname{bsupp}(w)|}.
+\tag{12}
+]
+
+### Proof
+
+In every block (i), the space (E_\sigma) contains only the coordinate
+[
+(i,\sigma_i).
+]
+
+Hence if (w) has both
+[
+w_{i,0}=1,
+\qquad
+w_{i,1}=1,
+]
+then (w\notin E_\sigma).
+
+Otherwise, every block in (\operatorname{bsupp}(w)) contains exactly one nonzero coordinate of (w).
+
+For (w\in E_\sigma), the selector (\sigma_i) is then forced to choose precisely that coordinate.
+
+Thus one independent selector bit is forced for each block of (\operatorname{bsupp}(w)), giving
+[
+\Pr_\sigma[w\in E_\sigma]
+=========================
+
+2^{-|\operatorname{bsupp}(w)|}.
+]
+
+---
+
+# 16. Exponentially few selectors are bad
+
+### Claim 5
+
+Under the low-codimension assumption
+[
+r\le\frac R4,
+]
+we have
+[
+\Pr_\sigma[|U_\sigma|>R]
+\le
+2^{-R/4}.
+\tag{13}
+]
+
+### Proof
+
+If
+[
+|U_\sigma|>R,
+]
+Claim 3 gives a vector
+[
+w\in W_\sigma
+\subseteq L\cap E_\sigma
+]
+with
+[
+|\operatorname{bsupp}(w)|>\frac R2.
+]
+
+Hence
+[
+{|U_\sigma|>R}
+\subseteq
+\bigcup_{\substack{
+w\in L\setminus{0}\
+|\operatorname{bsupp}(w)|>R/2
+}}
+{w\in E_\sigma}.
+]
+
+By the union bound and Claim 4,
+[
+\Pr_\sigma[|U_\sigma|>R]
+\le
+\sum_{\substack{
+w\in L\setminus{0}\
+|\operatorname{bsupp}(w)|>R/2
+}}
+2^{-|\operatorname{bsupp}(w)|}.
+]
+
+Every summand is at most
+[
+2^{-R/2}.
+]
+
+Since
+[
+\dim L=t,
+]
+the space (L) has
+[
+|L|=2^t
+]
+vectors.
+
+Therefore
+[
+\Pr_\sigma[|U_\sigma|>R]
+\le
+2^t,2^{-R/2}.
+]
+
+Since
+[
+t\le r\le\frac R4,
+]
+we obtain
+[
+\Pr_\sigma[|U_\sigma|>R]
+\le
+2^{R/4}2^{-R/2}
+===============
+
+2^{-R/4}.
+]
+
+This proves Claim 5.
+
+---
+
+# 17. Bound on the error
+
+For every (\sigma,z),
+[
+0\le h_{A,\sigma}(z)\le1.
+]
+
+Hence, using (8),
+[
+E_A(z)
+\le
+2^{-N}
+\sum_\sigma
+\mathbf 1[|U_\sigma|>R]
+=======================
+
+\Pr_\sigma[|U_\sigma|>R].
+]
+
+By Claim 5,
+[
+E_A(z)\le2^{-R/4}.
+]
+
+Thus in the low-codimension case,
+[
+0\le E_A(z)\le2^{-R/4}.
+]
+
+In the high-codimension case we obtained
+[
+0\le E_A(z)\le2^{-\kappa_0R/4}.
+]
+
+Therefore, taking
+[
+\kappa
+======
+
+\min\left{
+\frac{\kappa_0}{4},
+\frac14
+\right},
+]
+we have in both cases
+[
+0\le E_A(z)\le2^{-\kappa R}.
+]
+
+Together with (9) and Claim 2, this proves the lemma.
+
+(\square)
+
+---
+
+# 18. Recommended Lean 4 decomposition
+
+For formalization, I would prove the result in approximately the following order.
+
+### A. Gadget facts
+
+1. Define `indexGadget`.
+2. Define `gadgetFiber`.
+3. Prove every one-block fiber has cardinality (4).
+4. Prove the (N)-block fiber has cardinality (4^N).
+5. Prove the selector vector is uniform on the fiber.
+6. Prove that after fixing a selector (\sigma), selected data bits equal (z) and unselected data bits are independent free bits.
+
+### B. Conditional decomposition
+
+7. Define `conditionalDensity A σ z`.
+8. Prove
+   [
+   h_A(z)=2^{-N}\sum_\sigma h_{A,\sigma}(z).
+   ]
+9. Define `selectedSubspace σ = E_σ`.
+10. Define (L=\operatorname{rowspan}(M_y)).
+11. Define `W σ = L ⊓ E_σ`.
+12. Define `blockSupport`.
+13. Define
+    [
+    U_\sigma=\bigcup_{w\in W_\sigma}\operatorname{bsupp}(w).
+    ]
+
+### C. Linear algebra
+
+14. Prove the solution-count lemma:
+    a consistent system (By=b) over (\mathbb F_2) has
+    [
+    2^{n-\operatorname{rank}B}
+    ]
+    solutions.
+15. Prove
+    [
+    \dim W_\sigma=t-\operatorname{rank}(B_U).
+    ]
+16. Prove `conditionalDensity A σ` depends only on (U_\sigma).
+17. Optionally prove the stronger exact formula
+    [
+    h_{A,\sigma}
+    =
+    2^{-(t-\dim W_\sigma)}
+    \mathbf 1[P_\sigma].
+    ]
+
+### D. Junta construction
+
+18. Prove that every nonnegative function depending on at most (R) Boolean coordinates has a degree-(R) conical-junta representation.
+19. Define `good σ := |U_σ| ≤ R`.
+20. Define (J_A) as the average over good selectors.
+21. Define (E_A) as the average over bad selectors.
+22. Prove
+    [
+    h_A=J_A+E_A.
+    ]
+23. Prove
+    [
+    0\le J_A\le h_A.
+    ]
+24. Prove (J_A) is a degree-(R) conical junta.
+
+### E. Bad-selector estimate
+
+25. Prove that if (i\in U_\sigma), then
+    [
+    w\mapsto w_{i,\sigma_i}
+    ]
+    is a nonzero linear functional on (W_\sigma).
+26. Prove a nonzero linear functional over (\mathbb F_2) is (1) on exactly half of its domain.
+27. Deduce
+    [
+    \mathbb E_{w\in W_\sigma}
+    |\operatorname{bsupp}(w)|
+    =
+    |U_\sigma|/2.
+    ]
+28. Deduce
+    [
+    |U_\sigma|>R
+    \Longrightarrow
+    \exists w\in W_\sigma,\quad
+    |\operatorname{bsupp}(w)|>R/2.
+    ]
+29. Prove for fixed (w)
+    [
+    \Pr_\sigma[w\in E_\sigma]
+    \le
+    2^{-|\operatorname{bsupp}(w)|}.
+    ]
+30. Apply the union bound over (w\in L).
+31. Using
+    [
+    |L|=2^t,\qquad t\le r\le R/4,
+    ]
+    prove
+    [
+    \Pr[\sigma\text{ bad}]\le2^{-R/4}.
+    ]
+32. Deduce
+    [
+    E_A(z)\le2^{-R/4}.
+    ]
+
+### F. Final case split
+
+33. If (4r>R), use the affine-mass lemma and take (J_A=0).
+34. If (4r\le R), use the selector construction above.
+35. Combine both cases with
+    [
+    \kappa=\min(\kappa_0/4,1/4).
+    ]
+
+For Lean, it is preferable to formulate the case split as `4 * r > R` versus `4 * r ≤ R`, rather than using inequalities involving the natural-number expression (R/4). This avoids floor/division ambiguities. Likewise, the bad-selector estimate can first be proved with integer cardinalities and powers of (2), and only at the very end converted into the real-valued bound (2^{-\kappa R}).
