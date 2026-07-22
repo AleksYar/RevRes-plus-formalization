@@ -12,6 +12,7 @@ multilinear even when a tree queries the same variable repeatedly along a path.
 namespace Revres
 
 open Lemma53
+open scoped BigOperators
 
 variable {N : ℕ}
 
@@ -221,6 +222,77 @@ theorem exists_multilinear_polynomial_representation
         ∀ x, evalBoolean x p = encode (T.eval x) :=
   ⟨T.polynomial encode, T.multilinear_polynomial encode,
     T.totalDegree_polynomial_le_depth encode, T.evalBoolean_polynomial encode⟩
+
+/-- Substitute the polynomial of each `F2`-valued decision tree for one source variable. -/
+noncomputable def substituteTrees {M N : ℕ}
+    (T : Fin N → DecisionTree M F2) :
+    BooleanPolynomial N →ₐ[ℝ] BooleanPolynomial M :=
+  MvPolynomial.bind₁ fun i ↦ (T i).polynomial f2ToReal
+
+@[simp]
+theorem substituteTrees_C {M N : ℕ}
+    (T : Fin N → DecisionTree M F2) (r : ℝ) :
+    substituteTrees T (MvPolynomial.C r) = MvPolynomial.C r := by
+  simp [substituteTrees]
+
+@[simp]
+theorem substituteTrees_X {M N : ℕ}
+    (T : Fin N → DecisionTree M F2) (i : Fin N) :
+    substituteTrees T (MvPolynomial.X i) = (T i).polynomial f2ToReal := by
+  simp [substituteTrees]
+
+theorem evalBoolean_substituteTrees {M N : ℕ}
+    (T : Fin N → DecisionTree M F2)
+    (p : BooleanPolynomial N) (x : Fin M → F2) :
+    evalBoolean x (substituteTrees T p) =
+      evalBoolean (fun i ↦ (T i).eval x) p := by
+  change
+    MvPolynomial.aeval (fun i ↦ f2ToReal (x i))
+        (MvPolynomial.bind₁ (fun i ↦ (T i).polynomial f2ToReal) p) =
+      MvPolynomial.aeval (fun i ↦ f2ToReal ((T i).eval x)) p
+  rw [MvPolynomial.aeval_bind₁]
+  apply congrArg (fun values : Fin N → ℝ ↦ MvPolynomial.aeval values p)
+  funext i
+  exact (T i).evalBoolean_polynomial f2ToReal x
+
+theorem totalDegree_substituteTrees_le {M N d : ℕ}
+    (T : Fin N → DecisionTree M F2)
+    (hdepth : ∀ i, (T i).depth ≤ d)
+    (p : BooleanPolynomial N) :
+    (substituteTrees T p).totalDegree ≤ p.totalDegree * d := by
+  classical
+  have hdegree :
+      ∀ i, ((T i).polynomial f2ToReal).totalDegree ≤ d := fun i ↦
+    ((T i).totalDegree_polynomial_le_depth f2ToReal).trans (hdepth i)
+  have hsum :
+      substituteTrees T p =
+        ∑ m ∈ p.support,
+          substituteTrees T (MvPolynomial.monomial m (p.coeff m)) := by
+    rw [← map_sum, ← p.as_sum]
+  rw [hsum]
+  apply MvPolynomial.totalDegree_finsetSum_le
+  intro m hm
+  rw [substituteTrees, MvPolynomial.bind₁_monomial]
+  calc
+    (MvPolynomial.C (p.coeff m) *
+        ∏ i ∈ m.support, (T i).polynomial f2ToReal ^ m i).totalDegree ≤
+        (∏ i ∈ m.support, (T i).polynomial f2ToReal ^ m i).totalDegree := by
+      simpa using MvPolynomial.totalDegree_mul
+        (MvPolynomial.C (p.coeff m))
+        (∏ i ∈ m.support, (T i).polynomial f2ToReal ^ m i)
+    _ ≤ ∑ i ∈ m.support,
+        ((T i).polynomial f2ToReal ^ m i).totalDegree :=
+      MvPolynomial.totalDegree_finsetProd m.support
+        (fun i ↦ (T i).polynomial f2ToReal ^ m i)
+    _ ≤ ∑ i ∈ m.support, m i * d := by
+      apply Finset.sum_le_sum
+      intro i _hi
+      exact (MvPolynomial.totalDegree_pow ((T i).polynomial f2ToReal) (m i)).trans
+        (Nat.mul_le_mul_left (m i) (hdegree i))
+    _ = (m.sum fun _ exponent ↦ exponent) * d := by
+      rw [Finsupp.sum, Finset.sum_mul]
+    _ ≤ p.totalDegree * d :=
+      Nat.mul_le_mul_right d (MvPolynomial.le_totalDegree hm)
 
 end DecisionTree
 

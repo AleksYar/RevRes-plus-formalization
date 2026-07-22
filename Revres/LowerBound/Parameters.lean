@@ -1,4 +1,5 @@
 import Revres.LowerBound.Finite
+import Revres.SoPL.HardnessProof
 import Mathlib.Algebra.Order.Archimedean.Basic
 import Mathlib.Analysis.SpecificLimits.Normed
 import Mathlib.Data.Fintype.Card
@@ -20,7 +21,7 @@ open Filter Asymptotics
 
 /-- Shift the family parameter past all finite exceptional cases. -/
 def subsequenceShift (t : ℕ) : ℕ :=
-  t + 6
+  t + 16
 
 /-- Pointer width on the explicit subsequence. -/
 def subsequenceEll (t : ℕ) : ℕ :=
@@ -32,10 +33,14 @@ def subsequenceDegree (t : ℕ) : ℕ :=
 
 /-- Degree up to which support-local SoPL hardness is assumed. -/
 def subsequenceHardnessDegree (t : ℕ) : ℕ :=
-  2 ^ (4 * subsequenceShift t)
+  2 ^ (3 * subsequenceShift t)
 
 theorem subsequenceShift_six_le (t : ℕ) :
     6 ≤ subsequenceShift t := by
+  simp [subsequenceShift]
+
+theorem subsequenceShift_sixteen_le (t : ℕ) :
+    16 ≤ subsequenceShift t := by
   simp [subsequenceShift]
 
 theorem subsequenceEll_pos (t : ℕ) :
@@ -101,8 +106,8 @@ private theorem smallDegree_numeric
           ring
 
 private theorem transferDegree_numeric
-    (s : ℕ) (hs : 6 ≤ s) :
-    3584 * s ^ 2 * 2 ^ s < 2 ^ (4 * s) := by
+    (s : ℕ) (hs : 16 ≤ s) :
+    3584 * s ^ 2 * 2 ^ s < 2 ^ (3 * s) := by
   induction s, hs using Nat.le_induction with
   | base => norm_num
   | succ s hs ih =>
@@ -120,13 +125,33 @@ private theorem transferDegree_numeric
             _ ≤ (8 * s ^ 2) * (3584 * 2 ^ s) :=
               Nat.mul_le_mul_right (3584 * 2 ^ s) hsquare
             _ = 8 * (3584 * s ^ 2 * 2 ^ s) := by ring
-        _ < 8 * 2 ^ (4 * s) :=
+        _ < 8 * 2 ^ (3 * s) :=
           Nat.mul_lt_mul_of_pos_left ih (by norm_num)
-        _ < 16 * 2 ^ (4 * s) := by
+        _ = 2 ^ (3 * (s + 1)) := by
+          rw [show 3 * (s + 1) = 3 * s + 3 by ring, pow_add]
+          norm_num
+          ring
+
+private theorem hardnessSize_numeric
+    (s : ℕ) (hs : 16 ≤ s) :
+    8192 * (2 ^ (3 * s)) ^ 2 + 2 < 2 ^ (8 * s) := by
+  induction s, hs using Nat.le_induction with
+  | base => norm_num
+  | succ s hs ih =>
+      calc
+        8192 * (2 ^ (3 * (s + 1))) ^ 2 + 2 =
+            64 * (8192 * (2 ^ (3 * s)) ^ 2) + 2 := by
+          rw [show 3 * (s + 1) = 3 * s + 3 by ring, pow_add]
+          norm_num
+          ring
+        _ ≤ 64 * (8192 * (2 ^ (3 * s)) ^ 2 + 2) := by omega
+        _ < 64 * 2 ^ (8 * s) :=
+          Nat.mul_lt_mul_of_pos_left ih (by norm_num)
+        _ < 256 * 2 ^ (8 * s) := by
           gcongr
           norm_num
-        _ = 2 ^ (4 * (s + 1)) := by
-          rw [show 4 * (s + 1) = 4 * s + 4 by ring, pow_add]
+        _ = 2 ^ (8 * (s + 1)) := by
+          rw [show 8 * (s + 1) = 8 * s + 8 by ring, pow_add]
           norm_num
           ring
 
@@ -178,14 +203,23 @@ theorem subsequence_transferDegree (t : ℕ) :
         exact Nat.mul_le_mul_right (subsequenceEll t)
           (Nat.mul_le_mul_left 4 hdegree)
   have hnumeric := transferDegree_numeric (subsequenceShift t)
-    (subsequenceShift_six_le t)
+    (subsequenceShift_sixteen_le t)
   rw [cleaningCertificateDegree_eq, hmax]
   unfold subsequenceEll subsequenceDegree subsequenceHardnessDegree
   calc
     2 * (4 * 2 ^ subsequenceShift t * (8 * subsequenceShift t)) *
           (7 * (8 * subsequenceShift t)) =
         3584 * (subsequenceShift t) ^ 2 * 2 ^ subsequenceShift t := by ring
-    _ < 2 ^ (4 * subsequenceShift t) := hnumeric
+    _ < 2 ^ (3 * subsequenceShift t) := hnumeric
+
+theorem subsequence_hardness_size_condition (t : ℕ) :
+    SoPL.C_sopl * (subsequenceHardnessDegree t) ^ 2 <
+      SoD.ActiveEdge.localOrder (subsequenceEll t) - 1 := by
+  have hnumeric := hardnessSize_numeric (subsequenceShift t)
+    (subsequenceShift_sixteen_le t)
+  unfold SoPL.C_sopl subsequenceHardnessDegree subsequenceEll
+    SoD.ActiveEdge.localOrder BinaryPointer.order
+  omega
 
 /-! ## A natural-power lower scale -/
 
@@ -825,6 +859,7 @@ theorem degree_exponent_lt_lengthScale
         pow_lt_pow_right₀ (by norm_num) hexponent
   unfold subsequenceLengthScale
   change (2 : ℝ) ^ e < (1 / 200 : ℝ) * (2 : ℝ) ^ (A / D)
-  nlinarith
+  rw [one_div, inv_mul_eq_div]
+  exact (lt_div_iff₀ (by norm_num)).2 (by simpa [mul_comm] using htwo)
 
 end Revres

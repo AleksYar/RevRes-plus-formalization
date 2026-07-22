@@ -1,4 +1,4 @@
-import Revres.Polynomial.Certificate
+import Revres.Polynomial.ErrorReduction
 import Revres.SoPL.Encoding
 import Revres.SoPL.PathFamily
 
@@ -29,6 +29,21 @@ def PathFamilyNSHardness (ell : ℕ) (hell : 0 < ell)
     (∀ y, IsEncodedPathFamily ell hell y →
       (1 / 2 : ℝ) ≤ Q y ∧ Q y ≤ (3 / 2 : ℝ)) →
     degreeLowerBound ≤ cert.degree
+
+/-- Specialize generic certificate error reduction to encoded path-family assignments. -/
+theorem reduceHalfError_path
+    {ell degree : ℕ} {hell : 0 < ell}
+    {Q : (Fin (Encoding.variableCount ell) → F2) → ℝ}
+    (cert : NSCertificate (Encoding.searchCNF ell hell) Q)
+    (hdegree : cert.DegreeLE degree)
+    (happrox : ∀ y, IsEncodedPathFamily ell hell y →
+      (1 / 2 : ℝ) ≤ Q y ∧ Q y ≤ (3 / 2 : ℝ)) :
+    cert.reduceHalfError.DegreeLE (8 * degree) ∧
+      ∀ y, IsEncodedPathFamily ell hell y →
+        (255 / 256 : ℝ) ≤ reduceHalfErrorValue (Q y) ∧
+          reduceHalfErrorValue (Q y) ≤ 1 := by
+  exact ⟨NSCertificate.reduceHalfError_degreeLE hdegree,
+    reduceHalfErrorValue_bounds_on Q (IsEncodedPathFamily ell hell) happrox⟩
 
 namespace PathFamilyNSHardness
 

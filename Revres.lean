@@ -15,6 +15,7 @@ import Revres.Conical.Representation
 import Revres.Conical.Completion
 import Revres.LowerBound.Abstract
 import Revres.Polynomial.Certificate
+import Revres.Polynomial.ErrorReduction
 import Revres.Polynomial.Normalization
 import Revres.DecisionTree.Polynomial
 import Revres.DecisionTree.Transfer
@@ -27,6 +28,19 @@ import Revres.SoPL.Semantics
 import Revres.SoPL.PathFamily
 import Revres.SoPL.Encoding
 import Revres.SoPL.Hardness
+import Revres.SoPL.ApproxNS.SinkDecomposition
+import Revres.SoPL.ApproxNS.Reduction
+import Revres.SoPL.ApproxNS.ReductionPolynomial
+import Revres.SoPL.ApproxNS.Average
+import Revres.SoPL.ApproxNS.RowLocality
+import Revres.SoPL.ApproxNS.Reroute
+import Revres.SoPL.ApproxNS.LocalIndistinguishability
+import Revres.SoPL.ApproxNS.ORReduction
+import Revres.ApproxDegree.Multilinearize
+import Revres.ApproxDegree.Symmetrize
+import Revres.ApproxDegree.DiscreteMarkov
+import Revres.ApproxDegree.OR
+import Revres.SoPL.HardnessProof
 import Revres.SoD.Semantics
 import Revres.SoD.MacroGrid
 import Revres.SoD.Encoding

@@ -1,11 +1,12 @@
 import Revres.LowerBound.Parameters
+import Revres.SoPL.HardnessProof
 
 /-!
-# Conditional subsequence lower bound
+# Subsequence lower bound
 
-This file packages the explicit lifted Sink-of-DAG family. The support-local
-SoPL hardness statement remains an external proposition supplied to the main
-lower-bound theorems.
+This file packages the explicit lifted Sink-of-DAG family. The conditional
+lower-bound API is retained, and the proved support-local SoPL hardness theorem
+supplies its unconditional instantiation.
 -/
 
 namespace Revres
@@ -13,13 +14,22 @@ namespace Revres
 open Filter
 
 /-- The support-local path-family hardness required uniformly along the fixed
-subsequence. This proposition is an input, not an asserted result. -/
+subsequence. -/
 def SubsequencePathFamilyHardness : Prop :=
   ∀ t : ℕ,
     SoPL.PathFamilyNSHardness
       (subsequenceEll t)
       (subsequenceEll_pos t)
       (subsequenceHardnessDegree t)
+
+/-- The support-local path-family hardness holds uniformly along the fixed
+subsequence. -/
+theorem subsequencePathFamilyHardness :
+    SubsequencePathFamilyHardness := by
+  intro t
+  exact SoPL.pathFamilyNSHardness_of_size
+    (subsequenceEll_pos t)
+    (subsequence_hardness_size_condition t)
 
 /-- Every ordinary formula underlying the explicit family is unsatisfiable. -/
 theorem subsequenceBaseFormula_unsat (t : ℕ) :
@@ -50,6 +60,13 @@ theorem subsequence_revres_lower_bound
       (subsequence_smallDegree t)
       π
 
+/-- Exact unconditional lower bound along the explicit subsequence. -/
+theorem subsequence_revres_lower_bound_unconditional
+    (t : ℕ)
+    (π : RevResRefutation (indexLift (subsequenceBaseFormula t))) :
+    subsequenceLengthScale t ≤ (π.length : ℝ) :=
+  subsequence_revres_lower_bound subsequencePathFamilyHardness t π
+
 /-- Every fixed power of the concrete dense formula size is eventually below
 the length of every RevRes refutation, conditional only on path-family
 hardness. -/
@@ -64,7 +81,7 @@ theorem subsequence_revres_superpolynomial
       ∀ᶠ t : ℕ in atTop,
         K * subsequenceShift t < 2 ^ subsequenceShift t := by
     simpa [K, subsequenceShift] using
-      (Filter.tendsto_add_atTop_nat 6).eventually (eventually_linear_lt_two_pow K)
+      (Filter.tendsto_add_atTop_nat 16).eventually (eventually_linear_lt_two_pow K)
   filter_upwards [hgrowth] with t ht
   intro π
   calc
@@ -74,5 +91,15 @@ theorem subsequence_revres_superpolynomial
     _ < subsequenceLengthScale t := by
       exact degree_exponent_lt_lengthScale d t (by simpa [K] using ht)
     _ ≤ (π.length : ℝ) := subsequence_revres_lower_bound hHard t π
+
+/-- Every fixed power of the concrete dense formula size is eventually below
+the length of every RevRes refutation, without an external hardness
+hypothesis. -/
+theorem subsequence_revres_superpolynomial_unconditional
+    (d : ℕ) :
+    ∀ᶠ t : ℕ in Filter.atTop,
+      ∀ π : RevResRefutation (indexLift (subsequenceBaseFormula t)),
+        (subsequenceFormulaSize t : ℝ) ^ d < (π.length : ℝ) :=
+  subsequence_revres_superpolynomial subsequencePathFamilyHardness d
 
 end Revres
