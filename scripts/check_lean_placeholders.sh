@@ -6,8 +6,12 @@ script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 repo_root="$(cd -- "$script_dir/.." && pwd)"
 cd -- "$repo_root"
 
-if ! command -v rg >/dev/null 2>&1; then
-  echo "error: rg is required for the Lean placeholder scan" >&2
+if command -v rg >/dev/null 2>&1; then
+  scanner="rg"
+elif command -v grep >/dev/null 2>&1; then
+  scanner="grep"
+else
+  echo "error: rg or grep is required for the Lean placeholder scan" >&2
   exit 2
 fi
 
@@ -48,16 +52,21 @@ unexpected="$tmp_dir/unexpected.txt"
 stale="$tmp_dir/stale.txt"
 
 set +e
-rg --no-heading --color never --with-filename --glob '*.lean' \
-  '\b(sorry|admit|axiom)\b' "${roots[@]}" >"$observed_raw"
-rg_status=$?
+if [[ "$scanner" == "rg" ]]; then
+  rg --no-heading --color never --with-filename --glob '*.lean' \
+    '\b(sorry|admit|axiom)\b' "${roots[@]}" >"$observed_raw"
+else
+  grep -R -H -E -w --include='*.lean' \
+    '(sorry|admit|axiom)' "${roots[@]}" >"$observed_raw"
+fi
+scan_status=$?
 set -e
 
-case "$rg_status" in
+case "$scan_status" in
   0 | 1) ;;
   *)
-    echo "error: rg failed while scanning Lean sources" >&2
-    exit "$rg_status"
+    echo "error: $scanner failed while scanning Lean sources" >&2
+    exit "$scan_status"
     ;;
 esac
 
@@ -90,8 +99,12 @@ if [[ -s "$unexpected" ]]; then
     path="${record%%:*}"
     source_line="${record#*:}"
     if [[ -f "$path" ]]; then
-      rg -n --no-heading --color never --with-filename --fixed-strings -- \
-        "$source_line" "$path" >&2
+      if [[ "$scanner" == "rg" ]]; then
+        rg -n --no-heading --color never --with-filename --fixed-strings -- \
+          "$source_line" "$path" >&2
+      else
+        grep -n -H -F -- "$source_line" "$path" >&2
+      fi
     else
       printf '  %s\n' "$record" >&2
     fi
@@ -111,5 +124,5 @@ fi
 match_count="$(wc -l <"$observed" | tr -d '[:space:]')"
 roots_display="$(printf '%s, ' "${roots[@]}")"
 roots_display="${roots_display%, }"
-printf 'Lean placeholder scan passed: %s reviewed prose-only matches in %s.\n' \
-  "$match_count" "$roots_display"
+printf 'Lean placeholder scan passed: %s reviewed prose-only matches in %s using %s.\n' \
+  "$match_count" "$roots_display" "$scanner"
