@@ -94,6 +94,14 @@ def embeddedSubgrid {ell : ℕ} (hell : 0 < ell)
     (Q : GridNode (localOrder ell)) : Finset (GridNode (ambientOrder ell)) :=
   Finset.univ.image (embedNode hell Q)
 
+@[simp]
+theorem card_embeddedSubgrid {ell : ℕ} (hell : 0 < ell)
+    (Q : GridNode (localOrder ell)) :
+    (embeddedSubgrid hell Q).card = localOrder ell * localOrder ell := by
+  rw [embeddedSubgrid,
+    Finset.card_image_of_injective _ (embedNode_right_injective hell Q)]
+  simp
+
 theorem mem_embeddedSubgrid_iff {ell : ℕ} {hell : 0 < ell}
     {Q : GridNode (localOrder ell)} {v : GridNode (ambientOrder ell)} :
     v ∈ embeddedSubgrid hell Q ↔ ∃ u, embedNode hell Q u = v := by

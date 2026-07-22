@@ -28,6 +28,18 @@ noncomputable def RevresUnsat {X : Type u} [AddCommGroup X] [Module F2 X]
 noncomputable def indexLift (F : CNF N) : Finset (ParityClause (V N)) :=
   F.biUnion fun C => (liftClause C).image LiftedClause.toParityClause
 
+/-- The number of clauses in an index lift is at most the number of lifted
+clauses generated before image and union deduplication. -/
+theorem card_indexLift_le_sum_card_liftClause (F : CNF N) :
+    (indexLift F).card ≤ ∑ C ∈ F, (liftClause C).card := by
+  unfold indexLift
+  calc
+    (F.biUnion fun C => (liftClause C).image LiftedClause.toParityClause).card ≤
+        ∑ C ∈ F, ((liftClause C).image LiftedClause.toParityClause).card :=
+      Finset.card_biUnion_le
+    _ ≤ ∑ C ∈ F, (liftClause C).card := by
+      exact Finset.sum_le_sum fun C _ => Finset.card_image_le
+
 theorem mem_indexLift_iff (F : CNF N) (D : ParityClause (V N)) :
     D ∈ indexLift F ↔
       ∃ C ∈ F, ∃ L ∈ liftClause C, L.toParityClause = D := by
