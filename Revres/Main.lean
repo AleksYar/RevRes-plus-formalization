@@ -60,7 +60,17 @@ theorem subsequence_revres_lower_bound
       (subsequence_smallDegree t)
       π
 
-/-- Exact unconditional lower bound along the explicit subsequence. -/
+/--
+Paper correspondence: Section `sec:main-proof`, equation `eq:nlower` in
+`revres_xor_superpoly_lower_bound_restriction_notation.tex`.
+
+Mathematical content: All hardness and parameter premises are discharged on the
+explicit subsequence, yielding a pointwise quantitative lower bound for every
+RevRes refutation.
+
+Used by: `Revres.Public.hard_family_properties` and
+`Revres.Public.stretched_exponential_lower_bound`.
+-/
 theorem subsequence_revres_lower_bound_unconditional
     (t : ℕ)
     (π : RevResRefutation (indexLift (subsequenceBaseFormula t))) :

@@ -592,7 +592,18 @@ theorem card_soD_searchCNF_le (ell : ℕ) (hell : 0 < ell) :
     _ ≤ (1 + 2 * BinaryPointer.order ell ^ 2) * 2 ^ (2 * ell) := by
       exact Nat.mul_le_mul_right _ (card_soDOutput_le _)
 
-/-- Dense bit size of the parity CNF produced by the index lift. -/
+/--
+Mathematical form: For a base CNF `F` on `N` variables,
+`indexLiftBitSize F` is
+`3 * N + (indexLift F).card +
+  ∑ D ∈ indexLift F, D.length * (3 * N + 1)`.
+
+The three summands count the `3 * N` Boolean variables introduced by the
+three-bit indexing gadget, one header or delimiter per lifted parity clause,
+and one dense `3 * N`-bit coefficient vector plus one right-hand-side bit per
+parity-equation occurrence. This is the declared dense public size measure, not
+merely a clause count, variable count, or sum of clause widths.
+-/
 noncomputable def indexLiftBitSize {N : ℕ} (F : CNF N) : ℕ :=
   3 * N + (indexLift F).card +
     ∑ D ∈ indexLift F, D.length * (3 * N + 1)
@@ -612,7 +623,13 @@ theorem indexLiftBitSize_le (F : CNF N) :
 
 /-! ## Size of the explicit subsequence -/
 
-/-- The ordinary CNF underlying the lifted formula at index `t`. -/
+/--
+Mathematical form: `subsequenceBaseFormula t` is the canonical binary search
+CNF for the final cleaned, padded-ambient Sink-of-DAG instance at pointer width
+`2 * subsequenceEll t`, exposed by `SoD.Preprocess.cleaningFormula
+(subsequenceEll_pos t)`. SoPL path-family hardness is only an internal
+amplification ingredient; this definition is not an SoPL formula.
+-/
 noncomputable def subsequenceBaseFormula (t : ℕ) :
     CNF (SoD.Encoding.variableCount (2 * subsequenceEll t)) :=
   SoD.Preprocess.cleaningFormula (subsequenceEll_pos t)
@@ -634,7 +651,15 @@ private theorem linear_size_numeric (s : ℕ) (hs : 6 ≤ s) :
           norm_num
           ring
 
-/-- The concrete dense encoding has polynomial size in the chosen degree. -/
+/--
+Paper correspondence: Lemma `lem:lift-size`, equation `eq:polysize` in
+`revres_xor_superpoly_lower_bound_restriction_notation.tex`.
+
+Mathematical content: The actual dense encoding of the explicit lifted cleaned
+Sink-of-DAG family has size at most `subsequenceDegree t ^ 256`.
+
+Used by: The public finite and stretched-exponential family theorems.
+-/
 theorem subsequenceFormulaSize_le (t : ℕ) :
     subsequenceFormulaSize t ≤ (subsequenceDegree t) ^ 256 := by
   let s := subsequenceShift t

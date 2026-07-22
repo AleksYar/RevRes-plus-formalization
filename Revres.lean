@@ -59,3 +59,4 @@ import Revres.SoD.Amplification.Iterate
 import Revres.LowerBound.Finite
 import Revres.LowerBound.Parameters
 import Revres.Main
+import Revres.Public.MainTheorem

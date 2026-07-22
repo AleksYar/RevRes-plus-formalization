@@ -272,8 +272,18 @@ theorem averaged_endpoint_to_robust_identity
       _ = Esum z := one_mul _
       _ ≤ (R.card : ℝ) * decompositionError degree := (hEbound z).2
 
-/-- **Milestone M3.** Every refutation of the truth-table index lift yields an exact robust
-identity with explicit nonnegative base-clause coefficients and an exact step-count bound. -/
+/--
+Paper correspondence: Section `sec:short-to-robust`, equations `eq:master`,
+`eq:Jbound`, and `eq:Ebound` in
+`revres_xor_superpoly_lower_bound_restriction_notation.tex`.
+
+Mathematical content: Every refutation of the truth-table lift yields an exact
+identity `P = 1 + J + E`, where `P` has nonnegative base-clause coefficients,
+`J` is a bounded-degree conical junta, and both `J` and `E` are bounded by the
+recorded refutation length.
+
+Used by: `Revres.revres_to_explicit_robust_identity`.
+-/
 theorem revres_to_robust_identity
     {F : CNF N}
     (π : RevResRefutation (indexLift F))

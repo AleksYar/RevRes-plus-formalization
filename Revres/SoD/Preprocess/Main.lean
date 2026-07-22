@@ -53,7 +53,16 @@ theorem cleaningFormula_width_le (hell : 0 < ell) :
   simpa [cleaningFormula] using
     SoD.Encoding.searchCNF_width_le (2 * ell) (SoD.ActiveEdge.ambientWidth_pos hell)
 
-/-- **Milestone M7.** Complete Phase XI preprocessing of an explicit robust-identity junta. -/
+/--
+Paper correspondence: Section `sec:base-lb`, Lemma `lem:cleaning` in
+`revres_xor_superpoly_lower_bound_restriction_notation.tex`.
+
+Mathematical content: Node alignment, exit curiosity, and witness removal turn
+the robust-identity junta into a pointwise dominated clean nonnegative junta,
+while preserving the error and controlling both junta and certificate degree.
+
+Used by: `Revres.sod_cleaningFormula_robustAmplification`.
+-/
 theorem preprocess
     (hell : 0 < ell)
     {P E :

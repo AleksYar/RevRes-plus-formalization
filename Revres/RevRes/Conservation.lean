@@ -125,7 +125,18 @@ def length {B₀ Bₜ : Blackboard X} : RevDerivation B₀ Bₜ → ℕ
 
 end RevDerivation
 
-/-- Pointwise conservation along an explicit reversible derivation. -/
+/--
+Paper correspondence: Section `sec:revres`, Lemma `lem:strong-soundness` in
+`revres_xor_superpoly_lower_bound_restriction_notation.tex`.
+
+Mathematical content: Every explicit reversible derivation preserves the
+pointwise number of falsified clauses from its initial to its final blackboard.
+
+Formalization note: The paper states conservation for one rule application;
+`RevStep.falsifiedCount_eq` is that one-step result, and this theorem iterates it.
+
+Used by: `Revres.static_endpoint_identity`.
+-/
 theorem derivation_conservation {B₀ Bₜ : Blackboard X} (π : RevDerivation B₀ Bₜ) :
     ∀ x, falsifiedCount B₀ x = falsifiedCount Bₜ x := by
   induction π with

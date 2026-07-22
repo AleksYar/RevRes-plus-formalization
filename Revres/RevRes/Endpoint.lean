@@ -47,7 +47,17 @@ theorem falsifiedCount_blackboardOfMultiplicities {ι : Type v} [Fintype ι]
   rw [map_sum]
   simp [countHom]
 
-/-- The manuscript-style endpoint identity with indexed initial multiplicities. -/
+/--
+Paper correspondence: Proposition `prop:static`, equation `eq:static` in
+`revres_xor_superpoly_lower_bound_restriction_notation.tex`.
+
+Mathematical content: The weighted falsified-clause count of the indexed initial
+clauses equals the contribution of `q` empty clauses plus the final residual
+count, pointwise on every assignment.
+
+Used by: This is the reader-facing exact Lean form of the manuscript's static
+endpoint identity.
+-/
 theorem static_endpoint_identity_indexed {ι : Type v} [Fintype ι]
     {Bₜ R : Blackboard X} {q : ℕ}
     (D : ι → ParityClause X) (α : ι → ℕ)

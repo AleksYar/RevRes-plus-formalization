@@ -20,8 +20,18 @@ variable {X : Type u} [AddCommGroup X] [Module F2 X]
 noncomputable local instance refutationDecidableEqParityClause :
     DecidableEq (ParityClause X) := Classical.decEq _
 
-/-- An explicit RevRes derivation from supported, nonempty initial clauses to an endpoint
-containing the empty clause. -/
+/--
+Mathematical form: A refutation of `G` consists of an initial multiset `B₀`, a
+final multiset `Bₜ`, and an explicit reversible derivation `B₀ → Bₜ`. Every
+initial occurrence is an axiom from `G`, the empty clause is absent from `B₀`,
+and it occurs in `Bₜ`.
+
+Blackboards are multisets and retain axiom multiplicity, so `initial` may repeat
+or omit formula clauses but cannot contain a non-axiom clause. For an empty-free
+`G`, the standard initial blackboard containing each formula clause once is a
+special case. A lower bound for every supported initial multiset is therefore
+at least as strong as one proved only for that standard blackboard.
+-/
 structure RevResRefutation (G : Finset (ParityClause X)) where
   initial : Blackboard X
   final : Blackboard X
@@ -34,7 +44,11 @@ namespace RevResRefutation
 
 variable {G : Finset (ParityClause X)} (π : RevResRefutation G)
 
-/-- The exact number of recorded reversible steps. -/
+/--
+Mathematical form: `π.length` is exactly the number of recorded reversible
+local steps in `π.derivation`. It is not an endpoint clause count, a tree size,
+a compressed line count, or the bit length of a serialized proof.
+-/
 def length : ℕ :=
   π.derivation.length
 

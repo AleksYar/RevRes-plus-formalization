@@ -87,7 +87,17 @@ theorem GoodState.B_pos {hell : 0 < ell}
     (hgood : GoodState hell JR s) : 0 < s.B :=
   lt_of_lt_of_le zero_lt_one hgood.one_le_B
 
-/-- Transfer the cleaned ambient certificate through the active-edge formulation. -/
+/--
+Paper correspondence: Lemma `lem:stage-restriction`, equation
+`eq:stage-restriction` in
+`revres_xor_superpoly_lower_bound_restriction_notation.tex`.
+
+Mathematical content: The cleaned ambient certificate transfers through the
+active-edge formulation to the current SoPL stage, with the explicit proof-degree
+cost `2 * proofDegree * (7 * ell)`.
+
+Used by: `normalized_restricted_certificate` and one-step amplification growth.
+-/
 theorem restricted_certificate {hell : 0 < ell}
     {JR : JuntaRep (Encoding.variableCount (2 * ell))} {s : AmpState ell}
     {P : (Fin (Encoding.variableCount (2 * ell)) → Lemma53.F2) → ℝ}

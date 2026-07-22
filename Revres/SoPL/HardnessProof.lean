@@ -25,8 +25,19 @@ theorem ApproxNS.orIndicator_eq_orValue {ell : ℕ} (x : ApproxNS.ORInput ell) :
 /-- The explicit constant in the support-local SoPL certificate-degree bound. -/
 def C_sopl : ℕ := 8192
 
-/-- A certificate approximating one on every encoded path family has degree quadratically large
-in the number of non-planted paths. -/
+/--
+Paper correspondence: Theorem `thm:sopl` and Corollary `cor:sopl-path` in
+`revres_xor_superpoly_lower_bound_restriction_notation.tex`.
+
+Mathematical content: A certificate approximating one on every encoded path
+family has degree quadratically large in the number of non-planted paths.
+
+Formalization note: The manuscript presents SoPL hardness as an external input;
+Lean proves this explicit support-local bound internally via the OR reduction,
+and therefore leaves no hardness assumption at the public capstone.
+
+Used by: `pathFamilyNSHardness_of_size`.
+-/
 theorem pathFamilyNS_degree_quadratic
     {ell : ℕ} (hell : 0 < ell)
     (Q : (Fin (Encoding.variableCount ell) → F2) → ℝ)

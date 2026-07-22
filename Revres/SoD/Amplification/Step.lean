@@ -50,8 +50,18 @@ theorem exists_amplification_step_data
   intro z hagree
   exact le_of_lt (hcleanup.2 z hagree)
 
-/-- One nonterminal good state advances by one stage and grows its bound by at
-least `7 / 5`. -/
+/--
+Paper correspondence: Lemma `lem:one-step-amplification` in
+`revres_xor_superpoly_lower_bound_restriction_notation.tex`.
+
+Mathematical content: One nonterminal good state advances by one macro-row and
+grows its certified lower bound.
+
+Formalization note: The paper records a factor `4 / 3`; under its concrete
+hypotheses the Lean capstone proves the stronger explicit factor `7 / 5`.
+
+Used by: `amplification_iterate_from` and the iterated amplification capstone.
+-/
 theorem amplification_step
     {hell : 0 < ell}
     {JR : JuntaRep (Encoding.variableCount (2 * ell))} {s : AmpState ell}

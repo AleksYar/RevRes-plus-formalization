@@ -17,4 +17,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v5
+      - name: Reject Lean placeholders and project axioms
+        run: bash scripts/check_lean_placeholders.sh
       - uses: leanprover/lean-action@v1

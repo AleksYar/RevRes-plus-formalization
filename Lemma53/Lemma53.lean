@@ -12,10 +12,21 @@ affine-to-conical decomposition of `Lemma53.txt`, fully discharged.
 namespace Lemma53
 
 set_option linter.dupNamespace false in
-/-- **The Main Lemma** (`Lemma53.txt`), unconditionally. Every affine subspace `A ⊆ (F₂³)^N` and
-every `R` admit a degree-`R` conical junta `J_A` and an error `E_A` with `h_A = J_A + E_A`,
-`0 ≤ J_A ≤ h_A ≤ 1`, and `0 ≤ E_A ≤ 2^{-κR}` for `κ = min(κ₀/4, 1/4)` — no hypotheses, no imported
-facts. -/
+/--
+Paper correspondence: Section `sec:indexing-lift`, Lemma
+`lem:affine-conical`, equations `eq:decomp` and `eq:error` in
+`revres_xor_superpoly_lower_bound_restriction_notation.tex`; the standalone
+mathematical source is `Lemma53.txt`.
+
+Mathematical content: Every affine subspace of `(F₂³)^N` has a gadget-fiber
+density equal to a degree-`R` conical junta plus a nonnegative error bounded by
+`2^(-min (κ₀ / 4) (1 / 4) * R)`.
+
+Formalization note: This unconditional capstone discharges the auxiliary
+high-rank input internally through `Lemma53.lemmaA`; it is not an assumed axiom.
+
+Used by: `Revres.finalDensitySum_decomposition` and the robust-identity layer.
+-/
 theorem Lemma53 (N R : ℕ) (A : AffineSubspace F2 (V N)) :
     ∃ J E : (Fin N → F2) → ℝ,
       (∀ z, density N A z = J z + E z) ∧

@@ -12,8 +12,17 @@ hypothesis.
 
 namespace Revres
 
-/-- The cleaned Sink-of-DAG formula has the robust amplification property,
-conditional on the explicit SoPL hardness and degree hypotheses. -/
+/--
+Paper correspondence: Lemma `lem:robust-sod`, equations `eq:robust-id` and
+`eq:Jlarge` in `revres_xor_superpoly_lower_bound_restriction_notation.tex`.
+
+Mathematical content: Cleaning followed by iterated one-step growth gives the
+cleaned Sink-of-DAG formula its robust amplification property, conditional on
+the explicit SoPL hardness and degree hypotheses supplied to this finite theorem.
+
+Used by: `finite_revres_lower_bound_dichotomy` and
+`finite_revres_lower_bound`.
+-/
 theorem sod_cleaningFormula_robustAmplification
     {ell degree degreeLowerBound : ℕ}
     (hell : 0 < ell)
@@ -75,8 +84,16 @@ theorem finite_revres_lower_bound_dichotomy
     (sod_cleaningFormula_robustAmplification hell hlocal hHard
       htransferDegree hsmall)
 
-/-- Exact finite conditional lower bound for every RevRes refutation of the
-lifted cleaned Sink-of-DAG formula. -/
+/--
+Paper correspondence: Section `sec:main-proof`, equations `eq:case1` and
+`eq:case2` in `revres_xor_superpoly_lower_bound_restriction_notation.tex`.
+
+Mathematical content: The large-decomposition-error and robust-amplification
+cases combine into one exact minimum lower bound for every RevRes refutation of
+the lifted cleaned Sink-of-DAG formula.
+
+Used by: `subsequence_revres_lower_bound`.
+-/
 theorem finite_revres_lower_bound
     {ell degree degreeLowerBound : ℕ}
     (hell : 0 < ell)

@@ -1,0 +1,6 @@
+# Reviewed whole-word matches in Lean doc comments. Proof code is never allowed.
+Lemma53/Lemma53.lean:high-rank input internally through `Lemma53.lemmaA`; it is not an assumed axiom.
+Lemma53/MainLemma.lean:subspace `A ⊆ (F₂³)^N` and every `R` admit a degree-`R` conical junta `J_A` and an error `E_A`
+Revres/RevRes/Refutation.lean:Blackboards are multisets and retain axiom multiplicity, so `initial` may repeat
+Revres/RevRes/Refutation.lean:initial occurrence is an axiom from `G`, the empty clause is absent from `B₀`,
+Revres/RevRes/Refutation.lean:or omit formula clauses but cannot contain a non-axiom clause. For an empty-free
